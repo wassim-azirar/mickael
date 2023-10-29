@@ -1,0 +1,26 @@
+.reset {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  padding: 20px 40px;
+  font-size: 24px;
+  background-color: #ff5733;
+  border: none;
+  border-radius: 50px;
+  box-shadow: 0px 5px 15px rgba(0, 0, 0, 0.2);
+  cursor: pointer;
+  transition: all 0.3s ease;
+  font-family: CaskaydiaCove;
+  letter-spacing: 2px;
+}
+
+.reset:hover {
+  transform: translate(-50%, -50%) scale(1.1);
+  background-color: #ff8e66;
+}
+
+.reset:active {
+  transform: translate(-50%, -50%) scale(1);
+  background-color: #ff5733;
+}
