@@ -24,3 +24,8 @@
 .reset:focus {
   background-color: #ff5733;
 }
+
+.sound {
+  height: 50px;
+  width: 50px;
+}

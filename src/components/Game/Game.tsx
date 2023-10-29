@@ -11,6 +11,8 @@ const Game = () => {
   const [isGameOver, setIsGameOver] = useState<boolean>(false);
   const [score, setScore] = useState<number>(0);
   const [showExplosion, setShowExplosion] = useState(false);
+  const [isMuted, setIsMuted] = useState<boolean>(false);
+
   const [explosionCoords, setExplosionCoords] = useState<{
     top: number;
     left: number;
@@ -42,9 +44,13 @@ const Game = () => {
     const audioElement = document.getElementById("gameMusic") as HTMLAudioElement | null;
 
     if (audioElement) {
-      audioElement.play();
+      if (isMuted) {
+        audioElement.pause();
+      } else {
+        audioElement.play();
+      }
     }
-  }, []);
+  }, [isMuted]);
 
   useEffect(() => {
     const handleKeyPress = (e: KeyboardEvent) => {
@@ -118,7 +124,7 @@ const Game = () => {
 
             // Play explosion sound
             const explosionSound = document.getElementById("explosionSound") as HTMLAudioElement | null;
-            if (explosionSound) {
+            if (explosionSound && !isMuted) {
               explosionSound.play();
             }
 
@@ -151,7 +157,7 @@ const Game = () => {
     if (isGameOver) clearInterval(interval);
 
     return () => clearInterval(interval);
-  }, [playerColumn, isGameOver, isPaused]);
+  }, [playerColumn, isGameOver, isPaused, isMuted]);
 
   return (
     <>
@@ -169,6 +175,10 @@ const Game = () => {
             <img src="images/euro.svg" alt="Coin" style={{width: "50px", height: "50px", marginRight: "10px"}} />
             {score}
           </div>
+
+          <button onClick={() => setIsMuted(!isMuted)}>
+            {isMuted ? <img className="sound" src="images/sound-on.svg" alt="sound on" /> : <img className="sound" src="images/sound-off.svg" alt="sound off" />}
+          </button>
 
           <img src={currentIcon} alt={isPaused ? "Resume" : "Pause"} style={{width: "50px", height: "50px", marginRight: "10px"}} onClick={handlePauseResume} />
         </div>
