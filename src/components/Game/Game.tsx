@@ -39,6 +39,14 @@ const Game = () => {
   };
 
   useEffect(() => {
+    const audioElement = document.getElementById("gameMusic") as HTMLAudioElement | null;
+
+    if (audioElement) {
+      audioElement.play();
+    }
+  }, []);
+
+  useEffect(() => {
     const handleKeyPress = (e: KeyboardEvent) => {
       switch (e.key) {
         case "ArrowLeft":
@@ -107,6 +115,13 @@ const Game = () => {
               top: window.innerHeight - 120,
               left: playerColumn * 33.33
             });
+
+            // Play explosion sound
+            const explosionSound = document.getElementById("explosionSound") as HTMLAudioElement | null;
+            if (explosionSound) {
+              explosionSound.play();
+            }
+
             return {
               ...obstacle,
               exploded: true
@@ -139,61 +154,71 @@ const Game = () => {
   }, [playerColumn, isGameOver, isPaused]);
 
   return (
-    <div style={{display: "flex", flexDirection: "column", height: "100vh", overflow: "hidden"}}>
-      <div style={{display: "flex", alignItems: "center", justifyContent: "space-between", padding: "20px", fontSize: "24px", backgroundColor: "#ccc"}}>
-        <div style={{display: "flex", alignItems: "center"}}>
-          <img src="images/euro.svg" alt="Coin" style={{width: "50px", height: "50px", marginRight: "10px"}} />
-          {score}
+    <>
+      <audio id="gameMusic" loop>
+        <source src="/sounds/monsters.wav" type="audio/wav" />
+      </audio>
+
+      <audio id="explosionSound">
+        <source src="/sounds/explosion.wav" type="audio/wav" />
+      </audio>
+
+      <div style={{display: "flex", flexDirection: "column", height: "100vh", overflow: "hidden"}}>
+        <div style={{display: "flex", alignItems: "center", justifyContent: "space-between", padding: "20px", fontSize: "24px", backgroundColor: "#ccc"}}>
+          <div style={{display: "flex", alignItems: "center"}}>
+            <img src="images/euro.svg" alt="Coin" style={{width: "50px", height: "50px", marginRight: "10px"}} />
+            {score}
+          </div>
+
+          <img src={currentIcon} alt={isPaused ? "Resume" : "Pause"} style={{width: "50px", height: "50px", marginRight: "10px"}} onClick={handlePauseResume} />
         </div>
 
-        <img src={currentIcon} alt={isPaused ? "Resume" : "Pause"} style={{width: "50px", height: "50px", marginRight: "10px"}} onClick={handlePauseResume} />
+        <div style={{display: "flex", flex: 1}}>
+          <Column backgroundColor="#BFBFBF">
+            {!isGameOver && playerColumn === 0 && <Player positionY={50} />}
+            {obstacles
+              .filter((ob) => ob.column === 0)
+              .map((obstacle, index) => (
+                <Obstacle key={index} position={obstacle.position} column={obstacle.column} isExploded={obstacle.exploded} />
+              ))}
+          </Column>
+          <Column backgroundColor="#ABABAB">
+            {!isGameOver && playerColumn === 1 && <Player positionY={50} />}
+            {obstacles
+              .filter((ob) => ob.column === 1)
+              .map((obstacle, index) => (
+                <Obstacle key={index} position={obstacle.position} column={obstacle.column} isExploded={obstacle.exploded} />
+              ))}
+          </Column>
+          <Column backgroundColor="#B3B3B3">
+            {!isGameOver && playerColumn === 2 && <Player positionY={50} />}
+            {obstacles
+              .filter((ob) => ob.column === 2)
+              .map((obstacle, index) => (
+                <Obstacle key={index} position={obstacle.position} column={obstacle.column} isExploded={obstacle.exploded} />
+              ))}
+          </Column>
+          {showExplosion && explosionCoords && (
+            <img
+              src="images/explosion.gif"
+              alt="Explosion"
+              style={{
+                top: `calc(${explosionCoords.top}px  - 50px)`,
+                left: `calc(${explosionCoords.left}%  + 250px)`,
+                position: "absolute",
+                width: "100px",
+                height: "100px"
+              }}
+            />
+          )}
+          {isGameOver && (
+            <button onClick={resetGame} className="reset">
+              Restart Game
+            </button>
+          )}
+        </div>
       </div>
-
-      <div style={{display: "flex", flex: 1}}>
-        <Column backgroundColor="#BFBFBF">
-          {!isGameOver && playerColumn === 0 && <Player positionY={50} />}
-          {obstacles
-            .filter((ob) => ob.column === 0)
-            .map((obstacle, index) => (
-              <Obstacle key={index} position={obstacle.position} column={obstacle.column} isExploded={obstacle.exploded} />
-            ))}
-        </Column>
-        <Column backgroundColor="#ABABAB">
-          {!isGameOver && playerColumn === 1 && <Player positionY={50} />}
-          {obstacles
-            .filter((ob) => ob.column === 1)
-            .map((obstacle, index) => (
-              <Obstacle key={index} position={obstacle.position} column={obstacle.column} isExploded={obstacle.exploded} />
-            ))}
-        </Column>
-        <Column backgroundColor="#B3B3B3">
-          {!isGameOver && playerColumn === 2 && <Player positionY={50} />}
-          {obstacles
-            .filter((ob) => ob.column === 2)
-            .map((obstacle, index) => (
-              <Obstacle key={index} position={obstacle.position} column={obstacle.column} isExploded={obstacle.exploded} />
-            ))}
-        </Column>
-        {showExplosion && explosionCoords && (
-          <img
-            src="images/explosion.gif"
-            alt="Explosion"
-            style={{
-              top: `calc(${explosionCoords.top}px  - 50px)`,
-              left: `calc(${explosionCoords.left}%  + 250px)`,
-              position: "absolute",
-              width: "100px",
-              height: "100px"
-            }}
-          />
-        )}
-        {isGameOver && (
-          <button onClick={resetGame} className="reset">
-            Restart Game
-          </button>
-        )}
-      </div>
-    </div>
+    </>
   );
 };
 
