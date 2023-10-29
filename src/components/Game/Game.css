@@ -20,7 +20,7 @@
   background-color: #ff8e66;
 }
 
-.reset:active {
-  transform: translate(-50%, -50%) scale(1);
+.reset:active,
+.reset:focus {
   background-color: #ff5733;
 }

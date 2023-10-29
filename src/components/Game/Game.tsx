@@ -2,6 +2,7 @@ import {useEffect, useState} from "react";
 import Column from "../Column/Column";
 import Obstacle from "../Obstacle/Obstacle";
 import Player from "../Player/Player";
+import "./Game.css";
 
 const Game = () => {
   const [playerColumn, setPlayerColumn] = useState<number>(2);
