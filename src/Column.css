@@ -1,0 +1,21 @@
+.column {
+  flex: 1; /* to ensure equal width among columns */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100%; /* full height of its container */
+  background-image: repeating-linear-gradient(to bottom, transparent 0%, transparent 85%, white 85%, white 90%, transparent 90%, transparent 100%);
+  background-size: 100% 20px; /* Adjust this to control the size of the dashes */
+  animation: moveRoad 1s linear infinite; /* Adjust the duration (1s) to control the speed */
+  border-left: 3px dashed #555; /* left border for lanes */
+  border-right: 3px dashed #555; /* right border for lanes */
+}
+
+@keyframes moveRoad {
+  0% {
+    background-position: 0% 0%;
+  }
+  100% {
+    background-position: 0% -20px;
+  }
+}
